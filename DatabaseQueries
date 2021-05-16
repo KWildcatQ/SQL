@@ -1,0 +1,87 @@
+--List of Employees with Emp_No, Last_name, First_name, Sex, and Salary
+SELECT e.emp_no, 
+		e.first_name, 
+		e.last_name, 
+		e.sex, 
+		s.salary
+FROM employees as e
+JOIN salaries as s
+ON e.emp_no = s.emp_no
+
+--List of Employees Hired in 1986
+SELECT * 
+FROM (
+	SELECT e.last_name,
+			e.first_name,
+			e.hire_date,
+			SUBSTRING (e.hire_date, LENGTH(e.hire_date)-3, LENGTH(e.hire_date)) as hire_year
+	FROM employees as e
+	) as e
+where hire_year='1986'
+
+--List of Managers for Each Department with Last_Name, First_Name, Emp_no, Dept_Name
+SELECT e.last_name,
+		e.first_name, 
+		e.emp_no,
+		de.dept_no,
+		d.dept_name,
+		m.emp_no	
+FROM employees as e		
+JOIN departmentemployees as de
+ON de.emp_no = e.emp_no
+JOIN departments as d
+ON d.dept_no = de.dept_no
+JOIN managers as m
+ON m.emp_no = e.emp_no 
+
+--List of All Employees with Emp_No, Last_name, First_Name, and Dept_No
+SELECT e.emp_no,
+		e.last_name,
+		e.first_name,
+		d.dept_name
+FROM employees as e		
+JOIN departmentemployees as de
+ON de.emp_no = e.emp_no
+JOIN departments as d
+ON d.dept_no = de.dept_no		
+
+--List of Employees with First Name "Hercules" and Last Initial 'B'
+SELECT e.first_name,
+		e.last_name,
+		e.sex,
+		LEFT(e.last_name, 1) as last_initial
+FROM employees as e
+WHERE e.first_name = 'Hercules'
+AND LEFT(e.last_name, 1) = 'B'
+
+--List of employees in Sales Department
+SELECT de.emp_no, 
+		e.last_name,
+		e.first_name, 
+		d.dept_name 
+FROM departmentemployees as de
+JOIN employees as e
+ON de.emp_no = e.emp_no
+JOIN departments as d
+ON d.dept_no = de.dept_no
+WHERE d.dept_name = 'Sales'
+
+--List of Employees in Sales and Development Departments 
+SELECT de.emp_no, 
+		e.last_name,
+		e.first_name, 
+		d.dept_name 
+FROM departmentemployees as de
+JOIN employees as e
+ON de.emp_no = e.emp_no
+JOIN departments as d
+ON d.dept_no = de.dept_no
+WHERE d.dept_name = 'Sales' 
+	OR d.dept_name = 'Development'
+
+--Frequency Count of Employee Last Names
+SELECT e.last_name,
+	COUNT (e.last_name)
+FROM employees as e
+GROUP BY e.last_name
+ORDER BY (e.last_name) desc
